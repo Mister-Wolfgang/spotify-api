@@ -28,10 +28,22 @@ defmodule SpotifyApiWeb.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import SpotifyApiWeb.ConnCase
+      import Mox
     end
   end
 
   setup _tags do
-    {:ok, conn: Phoenix.ConnTest.build_conn()}
+    # Démarrer les services nécessaires pour les tests de contrôleurs avec leurs noms par défaut
+    rate_limiter = start_supervised!({SpotifyApi.RateLimiter, [requests_per_second: 100, burst_size: 100, name: SpotifyApi.RateLimiter]})
+    auth_manager = start_supervised!({SpotifyApi.Spotify.AuthManager, [name: SpotifyApi.Spotify.AuthManager]})
+
+    # Permettre aux processus d'utiliser les mocks
+    Mox.allow(Tesla.MockAdapter, self(), rate_limiter)
+    Mox.allow(Tesla.MockAdapter, self(), auth_manager)
+
+    # Vider le cache pour éviter les interférences entre tests
+    SpotifyApi.Cache.clear()
+
+    {:ok, conn: Phoenix.ConnTest.build_conn(), rate_limiter: rate_limiter, auth_manager: auth_manager}
   end
 end
