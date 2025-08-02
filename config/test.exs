@@ -1,14 +1,20 @@
 import Config
 
-# We don't run a server during test. If one is required,
-# you can enable the server option below.
 config :spotify_api, SpotifyApiWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
-  secret_key_base: "j9poMLoI0oKWRybQNjkQKE3uB9PzPcQWctON8x3hF7hE9pRf7YYaYR0PZdjck9qM",
+  secret_key_base: "test_secret_key_base",
   server: false
 
-# Print only warnings and errors during test
 config :logger, level: :warning
 
-# Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
+
+# Configuration Spotify pour tests (mock) - OVERRIDE les vraies valeurs
+config :spotify_api, :spotify,
+  client_id: "test_client_id",
+  client_secret: "test_client_secret",
+  base_url: "http://localhost:4002/mock",
+  auth_url: "http://localhost:4002/mock/token"
+
+# Désactiver le cache en test
+config :spotify_api, :cache_enabled, false
