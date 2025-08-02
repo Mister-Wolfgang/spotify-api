@@ -1,0 +1,5 @@
+17:57:02.007 [info] opened file:///home/wolfgang/Projects/Workspaces/spotify_api/mix.exs
+17:57:02.064 [info] Resolved entity: {:call, Kernel, :defmodule, 2}
+17:57:02.105 [warning] Task Elixir.LXical.Server.Provider.Handlers.DocumentSymbols.handle/2 ran for  44 ms. Result :success
+17:57:02.122 [warning] Task Elixir.LXical.Server.Provider.Handlers.CodeAction.handle/2 ran for  61 ms. Result :success
+17:57:02.326 [warning] Task Elixir.LXical.Server.Provider.Handlers.DocumentSymbols.handle/2 ran for  39 ms. Result :success
