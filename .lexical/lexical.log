@@ -3,3 +3,7 @@
 17:57:02.105 [warning] Task Elixir.LXical.Server.Provider.Handlers.DocumentSymbols.handle/2 ran for  44 ms. Result :success
 17:57:02.122 [warning] Task Elixir.LXical.Server.Provider.Handlers.CodeAction.handle/2 ran for  61 ms. Result :success
 17:57:02.326 [warning] Task Elixir.LXical.Server.Provider.Handlers.DocumentSymbols.handle/2 ran for  39 ms. Result :success
+18:02:20.137 [info] opened file:///home/wolfgang/Projects/Workspaces/spotify_api/.formatter.exs
+18:02:20.143 [warning] Task Elixir.LXical.Server.Provider.Handlers.CodeAction.handle/2 ran for  0.973 ms. Result :success
+18:02:20.184 [warning] Task Elixir.LXical.Server.Provider.Handlers.DocumentSymbols.handle/2 ran for  42 ms. Result :success
+18:02:20.480 [warning] Task Elixir.LXical.Server.Provider.Handlers.DocumentSymbols.handle/2 ran for  33 ms. Result :success
