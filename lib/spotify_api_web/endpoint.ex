@@ -7,7 +7,7 @@ defmodule SpotifyApiWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_spotify_api_key",
-    signing_salt: "BX5tZHO5",
+    signing_salt: "tCBO5mOT",
     same_site: "Lax"
   ]
 
