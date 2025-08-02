@@ -33,12 +33,37 @@ defmodule SpotifyApi.MixProject do
   defp deps do
     [
       {:phoenix, "~> 1.7.21"},
+      {:phoenix_html, "~> 3.3"},
+      {:phoenix_live_reload, "~> 1.2", only: :dev},
+      {:phoenix_live_view, "~> 0.20.1"},
+      {:floki, ">= 0.30.0", only: :test},
+      {:phoenix_live_dashboard, "~> 0.8.2"},
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.26"},
       {:jason, "~> 1.2"},
+      {:ecto_sql, "~> 3.0"},
       {:dns_cluster, "~> 0.1.1"},
-      {:bandit, "~> 1.5"}
+      {:plug_cowboy, "~> 2.5"},
+
+      # HTTP Client
+      {:tesla, "~> 1.8"},
+      {:hackney, "~> 1.18"},
+
+      # Cache
+      {:cachex, "~> 3.6"},
+
+      # Environment variables
+      {:dotenv, "~> 3.0", only: [:dev, :test]},
+
+      # API Documentation
+      {:open_api_spex, "~> 3.6"},
+
+      # Utilities
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.3", only: [:dev, :test], runtime: false},
+      {:ex_machina, "~> 2.7", only: :test},
+      {:mox, "~> 1.0", only: :test}
     ]
   end
 
@@ -50,7 +75,8 @@ defmodule SpotifyApi.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get"]
+      setup: ["deps.get"],
+      test: ["test"]
     ]
   end
 end
