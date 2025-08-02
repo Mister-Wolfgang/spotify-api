@@ -283,6 +283,15 @@ mix compile
 mix test
 ```
 
+### Exemples d’erreurs API
+
+- **401 Unauthorized** : Token expiré ou credentials invalides.  
+  Solution : Vérifier `.env`, relancer le serveur.
+- **429 Too Many Requests** : Limite de requêtes atteinte.  
+  Solution : Attendre le délai indiqué dans la réponse.
+- **400 Bad Request** : Paramètre manquant ou incorrect.  
+  Solution : Vérifier l’URL et les paramètres envoyés.
+
 ## 📚 Utilisation de l'API
 
 ### Endpoints disponibles :
@@ -333,6 +342,28 @@ lib/
     ├── router.ex               # Routes
     └── controllers/            # API controllers
 ```
+
+## 📈 Schéma visuel
+
+```
+[Client] → [Phoenix Router] → [Controller] → [Business Logic] → [Spotify API]
+                                 ↓
+                              [Cache]
+                                 ↓
+                           [Rate Limiter]
+```
+
+## 🧩 Extensions & Avancés
+
+- **Ajouter un endpoint** : Créer un contrôleur dans `lib/spotify_api_web/controllers/`, ajouter la route dans `router.ex`.
+- **Ajouter un worker** : Créer le module dans `lib/spotify_api/workers/`, ajouter au supervision tree dans `application.ex`.
+- **Ajouter une stratégie de cache** : Créer dans `lib/spotify_api/cache/strategies.ex`, référencer dans le cache principal.
+
+### Cas d’usage avancés
+
+- **Pagination** : Utiliser les paramètres `limit` et `offset` dans l’URL.
+- **Filtrage** : Ajouter des paramètres de requête pour filtrer par année, type d’album, etc.
+- **Monitoring** : Utiliser le module `performance/metrics.ex` pour exporter des métriques.
 
 ## 🚀 Déploiement
 

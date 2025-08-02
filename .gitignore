@@ -36,3 +36,4 @@ spotify_api-*.tar
 erl_crash.dump
 *.ez
 /priv/static/
+*.log
