@@ -1,30 +1,48 @@
 defmodule SpotifyApi.Application do
-  # See https://hexdocs.pm/elixir/Application.html
-  # for more information on OTP Applications
   @moduledoc false
 
   use Application
 
   @impl true
   def start(_type, _args) do
-    children = [
-      SpotifyApiWeb.Telemetry,
-      {DNSCluster, query: Application.get_env(:spotify_api, :dns_cluster_query) || :ignore},
-      {Phoenix.PubSub, name: SpotifyApi.PubSub},
-      # Start a worker by calling: SpotifyApi.Worker.start_link(arg)
-      # {SpotifyApi.Worker, arg},
-      # Start to serve requests, typically the last entry
-      SpotifyApiWeb.Endpoint
-    ]
+    # Charger les variables d'environnement depuis .env (sauf en production)
+    unless Mix.env() == :prod do
+      Dotenv.load()           # 1. Charge .env dans System.get_env()
+      Mix.Task.run("loadconfig")  # 2. Recharge config/* avec les nouvelles variables
+    end
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
+    children = [
+      # Telemetry supervisor
+      SpotifyApiWeb.Telemetry,
+
+      # PubSub system
+      {Phoenix.PubSub, name: SpotifyApi.PubSub},
+
+      # Cache
+      {Cachex, name: :spotify_cache},
+
+      # Web endpoint
+      SpotifyApiWeb.Endpoint
+    ] ++ env_specific_children()
+
     opts = [strategy: :one_for_one, name: SpotifyApi.Supervisor]
     Supervisor.start_link(children, opts)
   end
 
-  # Tell Phoenix to update the endpoint configuration
-  # whenever the application is updated.
+  # Enfants spécifiques à l'environnement
+  defp env_specific_children do
+    case Mix.env() do
+      :test -> []  # Pas de services externes en mode test
+      _ -> [
+        # Rate Limiter
+        SpotifyApi.RateLimiter,
+
+        # Spotify Auth Manager
+        SpotifyApi.Spotify.AuthManager
+      ]
+    end
+  end
+
   @impl true
   def config_change(changed, _new, removed) do
     SpotifyApiWeb.Endpoint.config_change(changed, removed)
