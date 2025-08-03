@@ -405,3 +405,49 @@ Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de 
 - [Documentation Phoenix](https://hexdocs.pm/phoenix/)
 - [API Spotify](https://developer.spotify.com/documentation/web-api/)
 - [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/)
+
+## Endpoint API Phoenix
+
+### Récupérer les albums d’un artiste
+
+- **URL** : `/api/v1/artists/:name/albums`
+- **Méthode** : `GET`
+- **Paramètres** :
+  - `name` (string, requis) : Nom de l’artiste (ex : Radiohead)
+  - `album_types` (string, optionnel) : Types d’albums à inclure (ex : album,single)
+  - `limit` (integer, optionnel) : Nombre maximum d’albums à retourner (1-200)
+
+#### Exemple de requête
+
+```bash
+curl -X GET "http://localhost:4000/api/v1/artists/Radiohead/albums"
+```
+
+#### Exemple de réponse
+
+```json
+{
+  "albums": [
+    {
+      "id": "6ofEQubaL265rIW6WnCU8y",
+      "name": "KID A MNESIA",
+      "album_type": "album",
+      "external_urls": {
+        "spotify": "https://open.spotify.com/album/6ofEQubaL265rIW6WnCU8y"
+      },
+      "images": [
+        {
+          "width": 640,
+          "url": "https://i.scdn.co/image/ab67616d0000b273bbaaa8bf9aedb07135d2c6d3",
+          "height": 640
+        }
+      ],
+      "release_date": "2021-11-05",
+      "total_tracks": 34
+    }
+    // ...
+  ],
+  "artist": "Radiohead",
+  "total_albums": 44
+}
+```
