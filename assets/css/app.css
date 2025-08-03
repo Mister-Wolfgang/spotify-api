@@ -1,0 +1,220 @@
+/* Variables CSS pour les thèmes */
+:root {
+  --bg-color: #050505; /* Black */
+  --text-color: #fafafa; /* Beige */
+  --primary-color: #145c9e; /* Lapis Lazuli */
+  --secondary-color: #f18f01; /* Carrot orange */
+  --tertiary-color: #a31621; /* Madder */
+  --form-bg: rgba(20, 92, 158, 0.1);
+  --card-bg: rgba(20, 92, 158, 0.15);
+  --shadow: rgba(20, 92, 158, 0.2);
+}
+
+/* Thème clair */
+[data-theme="light"] {
+  --bg-color: #fafafa; /* Beige */
+  --text-color: #050505; /* Black */
+  --primary-color: #145c9e; /* Lapis Lazuli */
+  --secondary-color: #f18f01; /* Carrot orange */
+  --tertiary-color: #a31621; /* Madder */
+  --form-bg: rgba(20, 92, 158, 0.1);
+  --card-bg: rgba(20, 92, 158, 0.08);
+  --shadow: rgba(5, 5, 5, 0.15);
+}
+
+body {
+  font-family: "Inter", Arial, sans-serif;
+  background: var(--bg-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 1rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.album-search-form {
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Header avec bouton de thème */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: var(--form-bg);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+}
+
+.header h1 {
+  margin: 0;
+  color: var(--primary-color);
+  font-size: 1.8rem;
+}
+
+.theme-toggle {
+  background: var(--secondary-color);
+  color: var(--bg-color);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.theme-toggle:hover {
+  background: var(--tertiary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+form {
+  background: var(--form-bg);
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(20, 92, 158, 0.2);
+}
+
+form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+input {
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 2px solid var(--primary-color);
+  margin-right: 0.5rem;
+  background: var(--bg-color);
+  color: var(--text-color);
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  width: 300px;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 3px rgba(241, 143, 1, 0.2);
+}
+
+button[type="submit"] {
+  background: var(--primary-color);
+  color: var(--bg-color);
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background: var(--secondary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+}
+
+li {
+  background: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px var(--shadow);
+  border: 1px solid rgba(20, 92, 158, 0.2);
+  backdrop-filter: blur(10px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+li:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px var(--shadow);
+}
+
+li strong {
+  color: var(--secondary-color);
+  font-size: 1.2rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+li a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+li a:hover {
+  color: var(--tertiary-color);
+  text-decoration: underline;
+}
+
+img {
+  border-radius: 8px;
+  margin-top: 1rem;
+  box-shadow: 0 4px 12px var(--shadow);
+  transition: transform 0.3s ease;
+}
+
+img:hover {
+  transform: scale(1.05);
+}
+
+h2 {
+  color: var(--primary-color);
+  font-size: 1.5rem;
+  text-align: center;
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
+
+.no-results {
+  text-align: center;
+  color: var(--tertiary-color);
+  font-size: 1.1rem;
+  margin-top: 2rem;
+}
+
+/* Sections d'albums groupées */
+.album-section {
+  margin: 1rem 0;
+  padding: 1.5rem;
+  background: var(--form-bg);
+  border-radius: 12px;
+  border: 1px solid rgba(20, 92, 158, 0.2);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.album-section h3 {
+  margin: 0 0 1.5rem 0;
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 0.5rem;
+  font-size: 1.3rem;
+  text-align: left;
+}
