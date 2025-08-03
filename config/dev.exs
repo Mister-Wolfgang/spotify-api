@@ -6,7 +6,27 @@ config :spotify_api, SpotifyApiWeb.Endpoint,
   code_reloader: true,
   debug_errors: true,
   secret_key_base: "your_secret_key_base_here",
-  watchers: []
+  watchers: [
+    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]}
+  ],
+  live_reload: [
+    patterns: [
+      ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
+      ~r"priv/gettext/.*(po)$",
+      ~r"lib/spotify_api_web/(controllers|views|templates|components)/.*(ex|heex)$",
+      ~r"lib/spotify_api_web/layouts/.*(ex|heex)$"
+    ],
+    debounce: 200
+  ]
+
+# Configuration d'esbuild
+config :esbuild,
+  version: "0.17.11",
+  default: [
+    args: ~w(assets/css/app.css --bundle --target=es2017 --outfile=priv/static/css/app.css),
+    cd: Path.expand("..", __DIR__),
+    env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
+  ]
 
 config :spotify_api, dev_routes: true
 
