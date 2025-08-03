@@ -27,7 +27,7 @@ defmodule SpotifyApi.Features.ArtistAlbums do
          {:ok, albums} <- Albums.get_artist_albums(artist["id"], opts) do
 
       Logger.info("🎵 SUCCÈS: Successfully retrieved #{length(albums)} albums for #{artist_name}")
-      {:ok, albums}
+      {:ok, %{"artist" => artist["name"], "albums" => albums}}
     else
       {:error, :no_artists_found} ->
         Logger.warning("🎵 ERREUR: No artists found for: #{artist_name}")
@@ -42,6 +42,7 @@ defmodule SpotifyApi.Features.ArtistAlbums do
         {:error, reason}
     end
   end
+
 
   # Fonctions privées
 

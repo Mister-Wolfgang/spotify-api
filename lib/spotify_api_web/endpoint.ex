@@ -15,6 +15,13 @@ defmodule SpotifyApiWeb.Endpoint do
   #   websocket: [connect_info: [session: @session_options]],
   #   longpoll: [connect_info: [session: @session_options]]
 
+  # Socket pour Phoenix LiveReloader
+  if code_reloading? do
+    socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket,
+      websocket: true,
+      longpoll: true
+  end
+
   # Serve at "/" the static files from "priv/static" directory.
   #
   # You should set gzip to true if you are running phx.digest
@@ -29,6 +36,7 @@ defmodule SpotifyApiWeb.Endpoint do
   # :code_reloader configuration of your endpoint.
   if code_reloading? do
     plug Phoenix.CodeReloader
+    plug Phoenix.LiveReloader
   end
 
   plug Plug.RequestId

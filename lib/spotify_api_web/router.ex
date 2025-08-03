@@ -2,6 +2,16 @@
 defmodule SpotifyApiWeb.Router do
   use SpotifyApiWeb, :router
 
+  # Routes de développement pour le hot reload
+  if Application.compile_env(:spotify_api, :dev_routes) do
+    import Phoenix.LiveDashboard.Router
+
+    scope "/dev" do
+      pipe_through [:fetch_session, :protect_from_forgery]
+      live_dashboard "/dashboard", metrics: SpotifyApiWeb.Telemetry
+    end
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
     plug :fetch_session
@@ -43,6 +53,18 @@ defmodule SpotifyApiWeb.Router do
     scope "/v1" do
       get "/artists/:name/albums", ArtistAlbumsController, :index
     end
+  end
+
+  # Interface web pour la recherche d'albums
+  pipeline :browser do
+    plug :accepts, ["html"]
+    plug :fetch_session
+    plug :put_secure_browser_headers
+  end
+
+  scope "/", SpotifyApiWeb do
+    pipe_through :browser
+    get "/albums", AlbumWebController, :index
   end
 
   # Fallback route pour 404

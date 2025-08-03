@@ -1,0 +1,159 @@
+<form method="get" action="/albums" class="album-search-form">
+  <div style="flex: 1; display: flex; flex-direction: row; align-items: center; gap: 0.5rem;">
+    <input type="text" id="artist" name="artist" value={@artist} required placeholder="Rechercher un artiste..." style="font-weight: bold; background: #ffffff; color: #000000; flex: 1; padding: 0.5rem; border: 1px solid var(--primary-color); border-radius: 4px; font-size: 1rem;">
+    <button type="submit" style="visibility: hidden;"></button>
+  </div>
+  <button class="theme-toggle" onclick="toggleTheme()">
+    <span class="theme-icon">☀️</span>
+    <span class="theme-text">Mode Clair</span>
+  </button>
+</form>
+
+<%= if @albums && Enum.count(@albums) > 0 do %>
+  <%
+    grouped_albums = Enum.group_by(@albums, fn album -> Map.get(album, "album_type", "album") end)
+    singles = Map.get(grouped_albums, "single", [])
+    albums = Map.get(grouped_albums, "album", [])
+    compilations = Map.get(grouped_albums, "compilation", [])
+  %>
+
+  <h2>🎶 Discographie de <%= @artist %> (<%= Enum.count(@albums) %> résultats)</h2>
+
+  <%= for {type, list, icon} <- [{"singles", singles, "🎵"}, {"albums", albums, "💿"}, {"compilations", compilations, "📀"}], list != [] do %>
+    <div class="album-section">
+      <h3><%= icon %> <%= String.capitalize(type) %> (<%= Enum.count(list) %>)</h3>
+
+      <div
+        id={"#{type}-grid"}
+        class="album-grid"
+        data-open="false"
+        style="
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+          gap: 1rem;
+          overflow: hidden;
+          max-height: 140px;
+          transition: max-height 0.4s ease;
+        "
+      >
+        <%= for album <- list do %>
+          <%= if Map.has_key?(album, "external_urls") and Map.has_key?(album, "images") and album["images"] != [] do %>
+            <button
+              onclick={"window.open('" <> album["external_urls"]["spotify"] <> "', '_blank')"}
+              style="position: relative; border: none; padding: 0; cursor: pointer; overflow: hidden; border-radius: 0.5rem; background: none; width: 100%;"
+            >
+              <img
+                src={hd(album["images"])["url"]}
+                alt={"Couverture de #{Map.get(album, "name", "album")}"}
+                style="width: 100%; display: block; margin: 0;"
+              >
+              <div
+                class="overlay"
+                style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0, 0, 0, 0.6); color: white; padding: 0.5rem; font-size: 0.75rem; transform: translateY(100%); transition: transform 0.3s;"
+              >
+                <strong><%= Map.get(album, "name", "Nom inconnu") %></strong><br>
+                <span>Sortie : <%= Map.get(album, "release_date", "Date inconnue") %></span>
+              </div>
+            </button>
+          <% end %>
+        <% end %>
+      </div>
+
+      <button
+        id={"#{type}-toggle"}
+        onclick={"toggleGrid('#{type}')"}
+        style="margin-top: 0.5rem; background: #333; color: white; padding: 0.5rem 1rem; border: none; border-radius: 0.25rem; cursor: pointer;"
+      >
+        Voir plus
+      </button>
+    </div>
+  <% end %>
+<% else %>
+  <%= if @artist && @artist != "" do %>
+    <div class="no-results">
+      <p>❌ Aucun album trouvé pour <strong><%= @artist %></strong>.</p>
+      <p>Essayez avec un autre nom d'artiste.</p>
+    </div>
+  <% else %>
+    <div style="text-align: center; margin-top: 3rem; color: var(--primary-color);">
+      <p style="font-size: 1.2rem;">🎵 Recherchez un artiste pour découvrir ses albums !</p>
+    </div>
+  <% end %>
+<% end %>
+
+<script>
+// Gestion du thème
+function toggleTheme() {
+  const body = document.body;
+  const themeIcon = document.querySelector('.theme-icon');
+  const themeText = document.querySelector('.theme-text');
+
+  const currentTheme = body.getAttribute('data-theme');
+  const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+  body.setAttribute('data-theme', newTheme);
+
+  if (newTheme === 'light') {
+    themeIcon.textContent = '🌙';
+    themeText.textContent = 'Mode Sombre';
+  } else {
+    themeIcon.textContent = '☀️';
+    themeText.textContent = 'Mode Clair';
+  }
+
+  localStorage.setItem('spotify-theme', newTheme);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Thème
+  const savedTheme = localStorage.getItem('spotify-theme') || 'light';
+  document.body.setAttribute('data-theme', savedTheme);
+  const icon = document.querySelector('.theme-icon');
+  const text = document.querySelector('.theme-text');
+  if (savedTheme === 'light') {
+    icon.textContent = '🌙';
+    text.textContent = 'Mode Sombre';
+  } else {
+    icon.textContent = '☀️';
+    text.textContent = 'Mode Clair';
+  }
+
+  // Afficher boutons si overflow
+  ['singles', 'albums', 'compilations'].forEach(type => checkOverflow(type));
+
+  // Overlay hover
+  document.querySelectorAll('button .overlay').forEach(overlay => {
+    const parent = overlay.closest('button');
+    parent.addEventListener('mouseenter', () => overlay.style.transform = 'translateY(0)');
+    parent.addEventListener('mouseleave', () => overlay.style.transform = 'translateY(100%)');
+  });
+});
+
+// Toggle grid height
+function toggleGrid(type) {
+  const grid = document.getElementById(`${type}-grid`);
+  const button = document.getElementById(`${type}-toggle`);
+  const isOpen = grid.dataset.open === "true";
+
+  if (isOpen) {
+    grid.style.maxHeight = "140px";
+    button.textContent = "Voir plus";
+  } else {
+    grid.style.maxHeight = grid.scrollHeight + "px";
+    button.textContent = "Réduire";
+  }
+
+  grid.dataset.open = (!isOpen).toString();
+}
+
+// Vérifier s'il faut afficher "Voir plus"
+function checkOverflow(type) {
+  const grid = document.getElementById(`${type}-grid`);
+  const button = document.getElementById(`${type}-toggle`);
+
+  requestAnimationFrame(() => {
+    const overflow = grid.scrollHeight > 170;
+    button.style.display = overflow ? "inline-block" : "none";
+  });
+}
+</script>
