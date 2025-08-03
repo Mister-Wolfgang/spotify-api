@@ -215,6 +215,21 @@ MIX_ENV=prod mix compile
 MIX_ENV=prod mix phx.server
 ```
 
+---
+
+## 🌐 Accéder à l’interface front-end
+
+Après avoir démarré le serveur Phoenix, accédez à la nouvelle interface front-end via votre navigateur à l’adresse suivante :
+
+```
+http://localhost:4000/albums
+```
+
+L’interface propose une navigation simplifiée pour explorer les albums, rechercher des artistes et visualiser les résultats en temps réel.  
+Aucune configuration supplémentaire n’est nécessaire en mode développement.
+
+---
+
 ## 🧪 Tests
 
 ### Lancer tous les tests :
