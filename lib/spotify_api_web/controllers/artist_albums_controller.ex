@@ -127,19 +127,18 @@ defmodule SpotifyApiWeb.ArtistAlbumsController do
 
   defp handle_albums_request(conn, artist_name, opts) do
     Logger.info("Processing albums request for artist: #{artist_name}")
-
     start_time = System.monotonic_time(:millisecond)
 
     case ArtistAlbums.get_albums(artist_name, opts) do
-      {:ok, albums} ->
+      {:ok, %{"artist" => resolved_name, "albums" => albums}} ->
         duration = System.monotonic_time(:millisecond) - start_time
         Logger.info("Albums request completed in #{duration}ms")
 
-        response = AlbumFormatter.format_albums_response(albums, artist_name)
+        response = AlbumFormatter.format_albums_response(albums, resolved_name)
 
         conn
         |> put_resp_header("x-response-time", "#{duration}ms")
-        |> put_resp_header("cache-control", "public, max-age=1800")  # 30 min
+        |> put_resp_header("cache-control", "public, max-age=1800")
         |> json(response)
 
       {:error, :artist_not_found} ->
