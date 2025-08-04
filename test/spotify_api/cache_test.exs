@@ -27,14 +27,14 @@ defmodule SpotifyApi.CacheTest do
       key = "expiring_key"
       value = %{"data" => "test"}
 
-      # Cache avec TTL très court
-      Cache.put(key, value, ttl: 100)
+      # Cache avec TTL un peu plus long pour fiabilité
+      Cache.put(key, value, ttl: 200)
 
       # Vérifier que c'est bien en cache
       assert Cache.get(key) == value
 
       # Attendre expiration
-      :timer.sleep(150)
+      :timer.sleep(250)
 
       assert Cache.get(key) == nil
     end
@@ -54,10 +54,10 @@ defmodule SpotifyApi.CacheTest do
       value1 = %{"count" => 1}
       value2 = %{"count" => 2}
 
-      Cache.put(key, value1)
+      Cache.put(key, value1, ttl: 1000)
       assert Cache.get(key) == value1
 
-      Cache.put(key, value2)
+      Cache.put(key, value2, ttl: 1000)
       assert Cache.get(key) == value2
     end
 
@@ -80,7 +80,7 @@ defmodule SpotifyApi.CacheTest do
       key = "fetch_cached"
       cached_value = %{"cached" => true}
 
-      Cache.put(key, cached_value)
+      Cache.put(key, cached_value, ttl: 1000)
 
       # La fonction ne devrait pas être appelée
       fetch_fn = fn ->

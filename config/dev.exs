@@ -35,6 +35,15 @@ config :logger, :console, format: "[$level] $message\n"
 config :phoenix, :stacktrace_depth, 20
 config :phoenix, :plug_init_mode, :runtime
 
+# Configuration de la base de données
+config :spotify_api, SpotifyApi.Repo,
+  username: System.get_env("PGUSER") || "postgres",
+  password: System.get_env("PGPASSWORD") || "mot_de_passe_dev",
+  hostname: System.get_env("PGHOST") || "localhost",
+  database: System.get_env("PGDATABASE") || "spotify_api_dev",
+  show_sensitive_data_on_connection_error: true,
+  pool_size: 10
+
 # Configuration Spotify pour développement
 config :spotify_api, :spotify,
   client_id: System.get_env("SPOTIFY_CLIENT_ID") || "your_dev_client_id",
