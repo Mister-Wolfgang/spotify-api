@@ -19,7 +19,70 @@ API REST en Elixir/Phoenix pour récupérer les albums d'artistes via l'API Spot
 - **inotify-tools** (pour le live reload sur Linux)
 - **Compte Spotify Developer** (gratuit)
 
-## 🛠 Installation
+## 🗄️ Installation et configuration de PostgreSQL
+
+### Linux (Ubuntu/Debian)
+
+```bash
+sudo apt update
+sudo apt install postgresql postgresql-contrib
+sudo systemctl start postgresql
+sudo systemctl enable postgresql
+```
+
+### macOS
+
+```bash
+brew install postgresql
+brew services start postgresql
+```
+
+### Windows
+
+Télécharger l'installeur officiel : https://www.postgresql.org/download/windows/
+
+### Docker (toutes plateformes)
+
+```bash
+docker run --name spotify-postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres:14
+```
+
+### Création de la base et de l'utilisateur
+
+```bash
+sudo -u postgres psql
+# ou avec Docker :
+docker exec -it spotify-postgres psql -U postgres
+
+# Dans psql :
+CREATE USER spotify_user WITH PASSWORD 'Tartenpion17';
+CREATE DATABASE spotify_api_dev OWNER spotify_user;
+CREATE DATABASE spotify_api_test OWNER spotify_user;
+GRANT ALL PRIVILEGES ON DATABASE spotify_api_dev TO spotify_user;
+GRANT ALL PRIVILEGES ON DATABASE spotify_api_test TO spotify_user;
+\q
+```
+
+Vérifiez la configuration dans `config/dev.exs` et `config/test.exs` :
+
+```elixir
+config :spotify_api, SpotifyApi.Repo,
+  username: "spotify_user",
+  password: "Tartenpion17",
+  hostname: "localhost",
+  database: "spotify_api_dev" # ou spotify_api_test pour les tests
+```
+
+Initialisez les bases :
+
+```bash
+MIX_ENV=dev mix ecto.create
+MIX_ENV=dev mix ecto.migrate
+MIX_ENV=test mix ecto.create
+MIX_ENV=test mix ecto.migrate
+```
+
+## � Installation
 
 ### 1. Installer Erlang/OTP et Elixir
 
@@ -414,7 +477,7 @@ _build/prod/rel/spotify_api/bin/spotify_api start
 
 Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
 
-## 🔗 Liens utiles
+## � Liens utiles
 
 - [Documentation Elixir](https://elixir-lang.org/docs.html)
 - [Documentation Phoenix](https://hexdocs.pm/phoenix/)

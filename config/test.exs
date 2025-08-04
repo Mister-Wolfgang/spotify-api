@@ -18,3 +18,12 @@ config :spotify_api, :spotify,
 
 # Désactiver le cache en test
 config :spotify_api, :cache_enabled, false
+
+# Configuration de la base de données pour les tests
+config :spotify_api, SpotifyApi.Repo,
+  username: System.get_env("PGUSER") || "postgres",
+  password: System.get_env("PGPASSWORD") || "mot_de_passe_test",
+  hostname: System.get_env("PGHOST") || "localhost",
+  database: "#{System.get_env("PGDATABASE") || "spotify_api_test"}#{System.get_env("MIX_TEST_PARTITION")}",
+  pool: Ecto.Adapters.SQL.Sandbox,
+  pool_size: 10
