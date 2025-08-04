@@ -5,6 +5,7 @@ defmodule SpotifyApi.Features.ArtistAlbums do
   """
 
   alias SpotifyApi.Spotify.{Artists, Albums}
+  alias SpotifyApi.Services.{ArtistService, AlbumService}
 
   require Logger
 
@@ -24,10 +25,11 @@ defmodule SpotifyApi.Features.ArtistAlbums do
 
     with {:ok, artists} <- Artists.search(artist_name, search_opts),
          {:ok, artist} <- find_target_artist(artists, artist_name),
-         {:ok, albums} <- Albums.get_artist_albums(artist["id"], opts) do
+         {:ok, albums} <- Albums.get_artist_albums(artist["id"], opts),
+         {:ok, saved_artist} <- save_artist_and_albums(artist, albums) do
 
-      Logger.info("🎵 SUCCÈS: Successfully retrieved #{length(albums)} albums for #{artist_name}")
-      {:ok, %{"artist" => artist["name"], "albums" => albums}}
+      Logger.info("🎵 SUCCÈS: Successfully retrieved and saved #{length(albums)} albums for #{artist_name}")
+      {:ok, %{"artist" => saved_artist.name, "albums" => albums}}
     else
       {:error, :no_artists_found} ->
         Logger.warning("🎵 ERREUR: No artists found for: #{artist_name}")
@@ -61,6 +63,22 @@ defmodule SpotifyApi.Features.ArtistAlbums do
       artist ->
         Logger.info("🎯 MATCH TROUVÉ: '#{artist["name"]}' (ID: #{artist["id"]}) pour '#{artist_name}'")
         {:ok, artist}
+    end
+  end
+
+  # Fonction privée pour sauvegarder l'artiste et ses albums en base de données
+  defp save_artist_and_albums(spotify_artist_data, spotify_albums_data) do
+    Logger.info("💾 SAUVEGARDE: Sauvegarde de l'artiste #{spotify_artist_data["name"]} et ses #{length(spotify_albums_data)} albums")
+
+    with {:ok, artist} <- ArtistService.find_or_create_artist(spotify_artist_data),
+         {:ok, _albums} <- AlbumService.create_or_update_albums_for_artist(artist, spotify_albums_data) do
+      
+      Logger.info("💾 SUCCÈS: Artiste et albums sauvegardés avec succès")
+      {:ok, artist}
+    else
+      {:error, reason} ->
+        Logger.error("💾 ERREUR: Échec de la sauvegarde: #{inspect(reason)}")
+        {:error, reason}
     end
   end
 end

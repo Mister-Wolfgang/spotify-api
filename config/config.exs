@@ -17,6 +17,10 @@ config :logger, :console,
 
 config :phoenix, :json_library, Jason
 
+# Configuration Ecto
+config :spotify_api,
+  ecto_repos: [SpotifyApi.Repo]
+
 # Configuration Tesla (HTTP client)
 config :tesla, adapter: Tesla.Adapter.Hackney
 
