@@ -15,6 +15,9 @@ defmodule SpotifyApi.Application do
       # Telemetry supervisor
       SpotifyApiWeb.Telemetry,
 
+      # Database repo
+      SpotifyApi.Repo,
+
       # PubSub system
       {Phoenix.PubSub, name: SpotifyApi.PubSub},
 

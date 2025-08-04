@@ -44,6 +44,7 @@ defmodule SpotifyApi.MixProject do
       {:gettext, "~> 0.26"},
       {:jason, "~> 1.2"},
       {:ecto_sql, "~> 3.0"},
+      {:postgrex, ">= 0.0.0"},
       {:dns_cluster, "~> 0.1.1"},
       {:plug_cowboy, "~> 2.5"},
 

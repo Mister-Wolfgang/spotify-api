@@ -133,6 +133,7 @@ defmodule SpotifyApiWeb.ArtistAlbumsController do
       {:ok, %{"artist" => resolved_name, "albums" => albums}} ->
         duration = System.monotonic_time(:millisecond) - start_time
         Logger.info("Albums request completed in #{duration}ms")
+        Logger.info("Nom demandé: #{artist_name} / Nom résolu: #{resolved_name}")
 
         response = AlbumFormatter.format_albums_response(albums, resolved_name)
 
